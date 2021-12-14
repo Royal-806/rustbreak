@@ -21,6 +21,15 @@ arbitrary data to it.
 In Ruby there is [Daybreak] however for Rust there was no similar crate, until
 now!
 
+When not to use it
+------------------
+
+Rustbreak makes several trade-offs to be easy to use and extend, so knowing of these drawbacks is important if 
+you wish to use the library:
+
+- The Database needs to fit into memory (Rustbreak cannot do partial loads/saves, so if the Database exceeds your available memory you will run OOM)
+- Not all backends support atomic saves, so if your program crashes while it is saving you might save incomplete data (Notably only `PathBackend` supports atomic saves)
+
 Features
 --------
 
@@ -41,12 +50,11 @@ features = ["ron_enc"] # You can also use "yaml_enc" or "bin_enc"
 ```
 
 ```rust
-extern crate failure;
 extern crate rustbreak;
 use std::collections::HashMap;
 use rustbreak::{MemoryDatabase, deser::Ron};
 
-fn main() -> Result<(), failure::Error> {
+fn main() -> rustbreak::Result<()> {
     let db = MemoryDatabase::<HashMap<u32, String>, Ron>::memory(HashMap::new())?;
 
     println!("Writing to Database");
@@ -110,7 +118,7 @@ If you would like to use yaml you need to specify `yaml_enc` as a feature:
 
 ```toml
 [dependencies.rustbreak]
-version = "1"
+version = "2"
 features = ["yaml_enc"]
 ```
 
@@ -123,7 +131,7 @@ specify `ron_enc` as a feature:
 
 ```toml
 [dependencies.rustbreak]
-version = "1"
+version = "2"
 features = ["ron_enc"]
 ```
 
@@ -135,7 +143,7 @@ If you would like to use bincode you need to specify `bin_enc` as a feature:
 
 ```toml
 [dependencies.rustbreak]
-version = "1"
+version = "2"
 features = ["bin_enc"]
 ```
 
