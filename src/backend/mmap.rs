@@ -4,7 +4,7 @@ use failure::ResultExt;
 
 use super::Backend;
 
-use crate::error;
+use error;
 
 use std::cmp;
 use std::io;

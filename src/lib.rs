@@ -183,7 +183,7 @@
 
 
 extern crate serde;
-extern crate failure;
+#[macro_use] extern crate failure;
 
 #[cfg(feature = "ron_enc")]
 extern crate ron;
@@ -209,9 +209,9 @@ pub mod backend;
 pub mod deser;
 
 /// The `DeSerializer` trait used by serialization structs
-pub use crate::deser::DeSerializer;
+pub use deser::DeSerializer;
 /// The general error used by the Rustbreak Module
-pub use crate::error::RustbreakError;
+pub use error::RustbreakError;
 
 use std::sync::{Mutex, RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::fmt::Debug;
@@ -220,9 +220,9 @@ use serde::Serialize;
 use serde::de::DeserializeOwned;
 use failure::ResultExt;
 
-use crate::backend::{Backend, MemoryBackend, FileBackend};
+use backend::{Backend, MemoryBackend, FileBackend};
 #[cfg(feature = "mmap")]
-use crate::backend::MmapStorage;
+use backend::MmapStorage;
 
 /// The Central Database to RustBreak
 ///

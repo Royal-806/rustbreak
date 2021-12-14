@@ -39,7 +39,7 @@ pub struct RustbreakError {
 }
 
 impl Fail for RustbreakError {
-    fn cause(&self) -> Option<&dyn Fail> {
+    fn cause(&self) -> Option<&Fail> {
         self.inner.cause()
     }
 
