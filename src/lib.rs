@@ -1009,6 +1009,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_derive::Serialize;
     use std::collections::HashMap;
     use tempfile::NamedTempFile;
 
@@ -1024,7 +1025,7 @@ mod tests {
     }
 
     /// Used to test that `Default::default` isn't called.
-    #[derive(Clone, Debug, Serialize, serde::Deserialize)]
+    #[derive(Clone, Debug, Serialize, serde_derive::Deserialize)]
     struct PanicDefault;
     impl Default for PanicDefault {
         fn default() -> Self {

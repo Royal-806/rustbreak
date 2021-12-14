@@ -1,6 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 use crate::error;
 use std::io::Read;
 
@@ -15,6 +15,9 @@ pub use self::yaml::Yaml;
 
 #[cfg(feature = "bin_enc")]
 pub use self::bincode::Bincode;
+
+#[cfg(feature = "gura_enc")]
+pub use self::gura::Gura;
 
 /// A trait to bundle serializer and deserializer in a simple struct
 ///
@@ -77,6 +80,38 @@ pub trait DeSerializer<T: Serialize + DeserializeOwned>:
     fn serialize(&self, val: &T) -> error::DeSerResult<Vec<u8>>;
     /// Deserializes a [`String`] to a value.
     fn deserialize<R: Read>(&self, s: R) -> error::DeSerResult<T>;
+}
+
+#[cfg(feature = "gura_enc")]
+mod gura {
+    use std::io::Read;
+
+    use serde::de::DeserializeOwned;
+    use serde::Serialize;
+
+    use serde_gura::from_str as from_gura_string;
+    use serde_gura::to_string as to_gura_string;
+
+    use crate::deser::DeSerializer;
+    use crate::error;
+    /// Uses Gura to deser
+    #[derive(Debug, Default, Clone)]
+    pub struct Gura;
+
+    impl<T: Serialize + DeserializeOwned> DeSerializer<T> for Gura {
+        fn serialize(&self, val: &T) -> error::DeSerResult<Vec<u8>> {
+            Ok(to_gura_string(val).map(String::into_bytes)?)
+        }
+
+        fn deserialize<R: Read>(&self, s: R) -> error::DeSerResult<T> {
+            // hacky type convertions?
+            // This drops the error and will likely cause problems.
+            let content: String = s.bytes().into_iter().map(|b| b.unwrap() as char).collect();
+
+            //.map_err(|e| DeSerError::Internal(e.to_string()));
+            Ok(from_gura_string(&content)?)
+        }
+    }
 }
 
 #[cfg(feature = "ron_enc")]

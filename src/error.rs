@@ -9,21 +9,27 @@
 pub enum DeSerError {
     #[cfg(feature = "yaml_enc")]
     /// An error occured with Yaml
-    #[error("An error with yaml occured")]
+    #[error("An error with yaml occurred")]
     Yaml(#[from] serde_yaml::Error),
+
+    #[cfg(feature = "gura_enc")]
+    /// An error occurred in gura
+    #[error("An error with gura occurred")]
+    Gura(#[from] serde_gura::Error),
+
     #[cfg(feature = "ron_enc")]
     /// An error occured with Ron
-    #[error("An error with Ron occured")]
+    #[error("An error with Ron occurred")]
     Ron(#[from] ron::Error),
     #[cfg(feature = "bin_enc")]
-    /// An error occured with Bincode
-    #[error("An error with Bincode occured")]
+    /// An error occurred with Bincode
+    #[error("An error with Bincode occurred")]
     Bincode(#[from] std::boxed::Box<bincode::ErrorKind>),
-    /// An internal error to Rustbreak occured
-    #[error("An internal error to rustbreak occured, please report it to the maintainers")]
+    /// An internal error to Rustbreak occurred
+    #[error("An internal error to rustbreak occurred, please report it to the maintainers")]
     Internal(String),
     #[cfg(feature = "other_errors")]
-    /// A dynamic error occured
+    /// A dynamic error occurred
     ///
     /// Most likely the custom `DeSer` implementation has thrown an error, consult its documentation
     /// for more information

@@ -20,13 +20,17 @@ serde = "1"
 tempfile = "3"
 thiserror = "1.0.20"
 
+[dependencies.serde_gura]
+optional = true
+version = "0.1.4"
+
 [dependencies.ron]
 optional = true
-version = "0.6"
+version = "0.7.0"
 
 [dependencies.base64]
 optional = true
-version = "0.12"
+version = "0.13.0"
 
 [dependencies.bincode]
 optional = true
@@ -53,6 +57,6 @@ default = []
 ron_enc = ["ron"]
 bin_enc = ["bincode", "base64"]
 yaml_enc = ["serde_yaml"]
+gura_enc = ["serde_gura"]
 other_errors = ["anyhow"]
 mmap = ["memmap"]
-
